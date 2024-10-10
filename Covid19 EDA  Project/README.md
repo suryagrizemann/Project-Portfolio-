@@ -2,7 +2,7 @@
 
 ## Covid 19 Dashboard
 
-Explore the interactive dashboard showcasing the findings of this analysis: [Dashboard Link](https://public.tableau.com/views/Covidproject_17226240422510/Dashboard2?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
+Explore the interactive dashboard showcasing the findings of this analysis: [Dashboard Link](https://github.com/suryagrizemann/Project-Portfolio-/blob/main/Covid19%20EDA%20%20Project/images/Tableau%20dashboard.PNG)
 
 ## Project Overview
 
