@@ -1,58 +1,84 @@
-## Sales Insights Data Analysis Project
+# Sales Insights for a Computer Hardware Manufacturer
 
-### Instructions to setup mysql on your local computer
+This project focused on uncovering critical sales insights to support a computer hardware manufacturer's decision-making process. The sales team struggled to access actionable data, so the goal was to provide a clear, data-driven view of their sales performance.
 
-1. Follow step in this video to install mysql on your local computer
-https://www.youtube.com/watch?v=WuBcTJnIuzo
+## Technologies Used
+- SQL
+- Power BI
+This project highlights the use of SQL for data exploration, Power Query for data transformation, and Power BI for visualization, resulting in a powerful tool for data-driven decision-making.
 
-1. SQL database dump is in db_dump.sql file above. Download `db_dump.sql` file to your local computer and import it as per instructions given in the tutorial video
+## Key Components
 
-### Data Analysis Using SQL
+### 1. Data Analysis Using SQL
+Conducted exploratory data analysis (EDA) to extract valuable insights from the sales data. Key SQL queries included:
+- Extracting customer records and transactions for specific markets.
+- Analyzing sales trends by currency and year.
+- Calculating total revenue by year, month, and market.
+```sql
+-- Show all customer records
+SELECT * FROM customers;
 
-1. Show all customer records
+-- Show total number of customers
+SELECT count(*) FROM customers;
 
-    `SELECT * FROM customers;`
+-- Show transactions for Chennai market (market code for chennai is Mark001)
+SELECT * FROM transactions where market_code='Mark001';
 
-1. Show total number of customers
+-- Show distinct product codes that were sold in Chennai
+SELECT distinct product_code FROM transactions where market_code='Mark001';
 
-    `SELECT count(*) FROM customers;`
+-- Show transactions where currency is US dollars
+SELECT * from transactions where currency="USD";
 
-1. Show transactions for Chennai market (market code for chennai is Mark001
+-- Show transactions in 2020 (join with the date table)
+SELECT transactions.*, date.* 
+FROM transactions 
+INNER JOIN date 
+ON transactions.order_date = date.date 
+WHERE date.year = 2020;
 
-    `SELECT * FROM transactions where market_code='Mark001';`
+-- Show total revenue in 2020
+SELECT SUM(transactions.sales_amount) 
+FROM transactions 
+INNER JOIN date 
+ON transactions.order_date = date.date 
+WHERE date.year = 2020 AND (transactions.currency = "INR" OR transactions.currency = "USD");
 
-1. Show distrinct product codes that were sold in chennai
+-- Show total revenue in January 2020
+SELECT SUM(transactions.sales_amount) 
+FROM transactions 
+INNER JOIN date 
+ON transactions.order_date = date.date 
+WHERE date.year = 2020 AND date.month_name = "January" AND (transactions.currency = "INR" OR transactions.currency = "USD");
 
-    `SELECT distinct product_code FROM transactions where market_code='Mark001';`
+-- Show total revenue in Chennai in 2020
+SELECT SUM(transactions.sales_amount) 
+FROM transactions 
+INNER JOIN date 
+ON transactions.order_date = date.date 
+WHERE date.year = 2020 AND transactions.market_code = "Mark001"; 
+```
+### 2. Data Transformation with Power Query
+Transformed and normalized the data to ensure consistency, enabling accurate analysis. A custom formula was applied to convert all sales amounts to a single currency.
 
-1. Show transactions where currency is US dollars
+-- Formula to create normalised_amount column
 
-    `SELECT * from transactions where currency="USD"`
-
-1. Show transactions in 2020 join by date table
-
-    `SELECT transactions.*, date.* FROM transactions INNER JOIN date ON transactions.order_date=date.date where date.year=2020;`
-
-1. Show total revenue in year 2020,
-
-    `SELECT SUM(transactions.sales_amount) FROM transactions INNER JOIN date ON transactions.order_date=date.date where date.year=2020 and transactions.currency="INR\r" or transactions.currency="USD\r";`
-	
-1. Show total revenue in year 2020, January Month,
-
-    `SELECT SUM(transactions.sales_amount) FROM transactions INNER JOIN date ON transactions.order_date=date.date where date.year=2020 and and date.month_name="January" and (transactions.currency="INR\r" or transactions.currency="USD\r");`
-
-1. Show total revenue in year 2020 in Chennai
-
-    `SELECT SUM(transactions.sales_amount) FROM transactions INNER JOIN date ON transactions.order_date=date.date where date.year=2020
-and transactions.market_code="Mark001";`
-
-
-Data Analysis Using Power BI
-============================
-
-1. Formula to create norm_amount column
-
-`= Table.AddColumn(#"Filtered Rows", "norm_amount", each if [currency] = "USD" or [currency] ="USD#(cr)" then [sales_amount]*75 else [sales_amount], type any)`
-
+= Table.AddColumn(#"Filtered Rows", "normalised_amount", each if [currency] = "USD" or [currency] = "USD#(cr)" then [sales_amount] * 75 else [sales_amount])
 
 
+### 3. Dashboard Creation with Power BI
+Established relationships between tables in Power BI to enable seamless analysis across multiple data sources.
+Developed an interactive dashboard that visualizes sales performance across different dimensions, empowering the sales team to make informed decisions.
+
+#### Key Insights
+![key insights](https://github.com/user-attachments/assets/a2c09872-ea87-491b-a8d4-8d8ebea677bc)
+
+#### Performance Insights
+![performance insights](https://github.com/user-attachments/assets/49dc8f03-cd22-4ab5-afe7-8d4db9eb1ae1)
+
+#### Profit Analysis
+![Profit Analysis](https://github.com/user-attachments/assets/d9f24c71-1901-4077-a669-2f988ac4b469)
+
+### Conclusion:
+
+This project successfully addressed the challenge of unlocking hidden sales insights for a computer hardware manufacturer. By leveraging SQL for in-depth data analysis, Power Query for data transformation, and Power BI for data modeling and visualization, the sales team gained access to a comprehensive dashboard that enables informed, data-driven decisions. The integration of these tools not only streamlined the analysis process but also provided valuable insights that were previously inaccessible, ultimately contributing to better strategic planning and improved business outcomes.
